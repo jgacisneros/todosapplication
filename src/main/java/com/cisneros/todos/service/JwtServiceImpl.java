@@ -34,11 +34,11 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+JWT_EXPIRATION))
-                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+JWT_EXPIRATION))
+                .signWith(getSigningKey())
                 .compact();
 
     }
