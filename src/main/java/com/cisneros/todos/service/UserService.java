@@ -1,7 +1,7 @@
 package com.cisneros.todos.service;
 
-import com.cisneros.todos.entity.User;
+import com.cisneros.todos.response.UserResponse;
 
 public interface UserService {
-    User getUserInfo();
+    UserResponse getUserInfo();
 }

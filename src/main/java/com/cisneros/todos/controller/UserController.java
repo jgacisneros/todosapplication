@@ -1,6 +1,6 @@
 package com.cisneros.todos.controller;
 
-import com.cisneros.todos.entity.User;
+import com.cisneros.todos.response.UserResponse;
 import com.cisneros.todos.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public User getUserInfo() {
+    public UserResponse getUserInfo() {
         return userService.getUserInfo();
     }
 }
