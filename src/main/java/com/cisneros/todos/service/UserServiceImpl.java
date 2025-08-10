@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
             long adminCount = userRepository.countAdminUsers();
             return adminCount <= 1;
         }
-        return true;
+        return false;
     }
 
 }
