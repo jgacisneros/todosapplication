@@ -4,6 +4,7 @@ import com.cisneros.todos.entity.Authority;
 import com.cisneros.todos.entity.User;
 import com.cisneros.todos.repository.UserRepository;
 import com.cisneros.todos.response.UserResponse;
+import com.cisneros.todos.util.FindAuthenticatedUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -16,20 +17,17 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final FindAuthenticatedUser findAuthenticatedUser;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, FindAuthenticatedUser findAuthenticatedUser) {
         this.userRepository = userRepository;
+        this.findAuthenticatedUser = findAuthenticatedUser;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()
-                || authentication.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Authentication required");
-        }
-        User user = (User) authentication.getPrincipal();
+        User user = findAuthenticatedUser.getAuthenticatedUser();
         return new UserResponse(
                 user.getId(),
                 user.getFirstName() + " " + user.getLastName(),
@@ -42,13 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()
-                || authentication.getPrincipal().equals("anonymousUser")) {
-            throw new AccessDeniedException("Authentication required");
-        }
-        User user = (User) authentication.getPrincipal();
-
+        User user = findAuthenticatedUser.getAuthenticatedUser();
         if (isLastAdmin(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admin cannot delete itself");
         }
