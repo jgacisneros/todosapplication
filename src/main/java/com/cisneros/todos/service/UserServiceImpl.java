@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isNewPasswordConfirmed(String newPassword, String newPasswordConfirmation) {
-        return passwordEncoder.matches(newPassword, newPasswordConfirmation);
+        return newPassword.equals(newPasswordConfirmation);
     }
 
     private boolean isNewPasswordDifferent(String oldPassword, String newPassword) {
