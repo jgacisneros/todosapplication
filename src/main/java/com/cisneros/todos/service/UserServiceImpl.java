@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New passwords do not match");
         }
         if (!isNewPasswordDifferent(passwordUpdateRequest.getOldPassword(), passwordUpdateRequest.getNewPassword2())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old and news passwords must be different");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old and new passwords must be different");
         }
         user.setPassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
         userRepository.save(user);
