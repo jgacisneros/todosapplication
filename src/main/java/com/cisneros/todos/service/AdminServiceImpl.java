@@ -4,10 +4,14 @@ import com.cisneros.todos.entity.Authority;
 import com.cisneros.todos.entity.User;
 import com.cisneros.todos.repository.UserRepository;
 import com.cisneros.todos.response.UserResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -24,6 +28,24 @@ public class AdminServiceImpl implements AdminService {
     public List<UserResponse> getAllUsers() {
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
                 .map(this::convertToUserResponse).toList();
+    }
+
+    @Override
+    @Transactional
+    public UserResponse promoteToAdmin(long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty() ||
+                user.get().getAuthorities().stream()
+                        .anyMatch(authority -> "ROLE_ADMIN"
+                                .equals(authority.getAuthority()))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exists or already an admin");
+        }
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(new Authority("ROLE_EMPLOYEE"));
+        authorities.add(new Authority("ROLE_ADMIN"));
+        user.get().setAuthorities(authorities);
+        User savedUser = userRepository.save(user.get());
+        return convertToUserResponse(savedUser);
     }
 
     public UserResponse convertToUserResponse(User user) {
