@@ -51,6 +51,7 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    @Transactional
     public TodoResponse toggleTodoCompletion(long id) {
         User currentUser = findAuthenticatedUser.getAuthenticatedUser();
         Optional<Todo> todo = todoRepository.findByIdAndOwner(id, currentUser);
