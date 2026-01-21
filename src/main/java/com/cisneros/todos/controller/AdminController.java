@@ -13,6 +13,7 @@ import java.util.List;
 @Tag(name = "Admin REST API Endpoints", description = "Operations related to a admin")
 @RestController
 @RequestMapping("/api/admin")
+
 public class AdminController {
     private final AdminService adminService;
 

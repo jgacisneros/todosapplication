@@ -27,6 +27,7 @@ public class AuthenticationController {
         authenticationService.register(registerRequest);
     }
 
+
     @Operation(summary = "Login as user", description = "submit email and password to authenticate user")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
